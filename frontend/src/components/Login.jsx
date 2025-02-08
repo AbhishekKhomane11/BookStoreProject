@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from "react-hook-form"
+import axios from 'axios';
+import toast from 'react-hot-toast';
 function Login() {
   const {
     register,
@@ -8,7 +10,36 @@ function Login() {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => console.log(data)
+  const onSubmit = async (data) => {
+    const userInfo = {
+      email: data.email,
+      password: data.password, // Corrected to lowercase 'password'
+    };
+
+    try {
+      const res = await axios.post('/user/login', userInfo);
+      console.log(res.data);
+      if (res.data) {
+        toast.success("Logged in Successfully");
+        document.getElementById("my_modal_5").close()
+        setTimeout(() => {
+          
+          window.location.reload();
+          // Store user info as JSON in localStorage
+          localStorage.setItem("Users", JSON.stringify(res.data.user));
+        }, 1000);
+       
+      }
+
+    } catch (err) {
+      if (err.response) {
+        console.log(err);
+        toast.error("Error: " + err.response.data.message);
+        setTimeout(() => {}, 2000)
+      }
+    }
+  };
+  
   return (
     <div>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
@@ -18,7 +49,7 @@ function Login() {
         <div className="modal-box mt-4 space-y-4 p-10">
           <form onSubmit={handleSubmit(onSubmit)} method="dialog">
             <Link to="/" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 dark:text-black"
-            onClick={()=> document.getElementById("my_modal_5").closest()}>✕
+              onClick={() => document.getElementById("my_modal_5").closest()}>✕
             </Link>
 
 
@@ -28,7 +59,7 @@ function Login() {
               <br />
               <input type="email" placeholder='Enter your email' className='w-80 px-3 border rounded-md outline-none'
                 {...register("email", { required: true })}
-                />
+              />
               <br />
               {errors.email && <span className='text-sm text-red-500'>This field is required</span>}
             </div>

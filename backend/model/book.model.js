@@ -1,13 +1,28 @@
 import mongoose from "mongoose";
 
-const bookSchema = mongoose.Schema({
-    name :String,
-    price:Number,
-    category:String,
-    image:String,
-    title:String
-})
+const bookSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String,
+        required: false
+    },
+    title: {
+        type: String,
+        required: true
+    }
+});
 
-const Book = mongoose.model("Book",bookSchema);
-// data that come in bookschema will store in book
+const Book = mongoose.model("Book", bookSchema);
+
 export default Book;
