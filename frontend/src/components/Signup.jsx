@@ -19,7 +19,7 @@ function Signup() {
     };
   
     try {
-      const res = await axios.post('/user/signup', userInfo);
+      const res = await axios.post('https://booknest-7gtf.onrender.com/user/signup', userInfo);
       console.log(res.data);
       if (res.data) {
         toast.success("Signup successfully");
